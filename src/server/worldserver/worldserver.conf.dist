@@ -404,7 +404,7 @@ CleanCharacterDB = 0
 #                     Before use this feature, make a backup of your database.
 #
 #        Example:     14 - (CLEANING_FLAG_SKILLS + CLEANING_FLAG_SPELLS + CLEANING_FLAG_TALENTS
-#                           2+4+8 => 14. This will clean up skills, talents and spells will 
+#                           2+4+8 => 14. This will clean up skills, talents and spells will
 #                           remain enabled after the next cleanup)
 #        Default:     0  - (All cleanup methods will be disabled after the next cleanup)
 
@@ -2428,6 +2428,13 @@ Rate.MoveSpeed = 1
 Rate.InstanceResetTime = 1
 
 #
+#    Rate.Flightpaths.Cost
+#        Description: Price multiplier for taking a flight at a flightmaster
+#        Default:     1
+
+Rate.Flightpaths.Cost = 1
+
+#
 #    SkillGain.Crafting
 #    SkillGain.Defense
 #    SkillGain.Gathering
@@ -3386,7 +3393,7 @@ ICC.Buff.Alliance = 73828
 #
 #    PacketSpoof.Policy
 #        Description: Determines the course of action when packet spoofing is detected.
-#        Values:     0 - Log only 
+#        Values:     0 - Log only
 #                    1 - Log + kick
 #                    2 - Log + kick + ban
 
@@ -3412,4 +3419,4 @@ PacketSpoof.BanMode = 0
 PacketSpoof.BanDuration = 86400
 
 #
-################################################################################################### 
+###################################################################################################

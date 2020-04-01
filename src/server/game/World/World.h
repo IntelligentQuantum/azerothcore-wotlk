@@ -420,6 +420,7 @@ enum Rates
     RATE_DURABILITY_LOSS_ABSORB,
     RATE_DURABILITY_LOSS_BLOCK,
     RATE_MOVESPEED,
+    RATE_FLIGHT_PATH_COST,
     MAX_RATES
 };
 
@@ -787,7 +788,7 @@ class World
         char const* GetDBVersion() const { return m_DBVersion.c_str(); }
 
         void LoadAutobroadcasts();
-        
+
         void UpdateAreaDependentAuras();
 
         uint32 GetCleaningFlags() const { return m_CleaningFlags; }
@@ -902,7 +903,7 @@ class World
 
         std::string m_configFileList;
 };
- 
+
 #define sWorld World::instance()
 #endif
 /// @}

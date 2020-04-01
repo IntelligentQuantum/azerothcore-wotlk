@@ -1359,6 +1359,13 @@ void World::LoadConfigSettings(bool reload)
 
     m_int_configs[CONFIG_PACKET_SPOOF_BANDURATION] = sConfigMgr->GetIntDefault("PacketSpoof.BanDuration", 86400);
 
+    rate_values[RATE_FLIGHT_PATH_COST]  = sConfigMgr->GetFloatDefault("Rate.Flightpaths.Cost", 1.0f);
+    if (rate_values[RATE_FLIGHT_PATH_COST] < 0.0f)
+    {
+        sLog->outError("Rate.Flightpaths.Cost (%f) must be >=0. Using 0.0 instead.", rate_values[RATE_FLIGHT_PATH_COST]);
+        rate_values[RATE_FLIGHT_PATH_COST] = 0.0f;
+    }
+
     // call ScriptMgr if we're reloading the configuration
     sScriptMgr->OnAfterConfigLoad(reload);
 }
