@@ -113,7 +113,9 @@ public:
             { "unbindsight",        SEC_ADMINISTRATOR,      false, HandleUnbindSightCommand,            "" },
             { "playall",            SEC_GAMEMASTER,         false, HandlePlayAllCommand,                "" },
             { "skirmish",           SEC_ADMINISTRATOR,      false, HandleSkirmishCommand,               "" },
-            { "mailbox",            SEC_MODERATOR,          false, &HandleMailBoxCommand,               "" }
+            { "mailbox",            SEC_MODERATOR,          false, &HandleMailBoxCommand,               "" },
+            { "ilevel",             SEC_PLAYER,             false, &HandleILevelCommand,                "" },
+            { "gearstats",          SEC_PLAYER,             false, &HandleGearStatsCommand,             "" },
         };
         return commandTable;
     }
@@ -3305,6 +3307,59 @@ public:
         Player* player = handler->GetSession()->GetPlayer();
 
         handler->GetSession()->SendShowMailBox(player->GetGUID());
+        return true;
+    }
+
+    static bool HandleILevelCommand(ChatHandler* handler, char const* /*args*/)
+    {
+        Player* player = handler->getSelectedPlayerOrSelf();
+
+        if (!player)
+            return false;
+
+        handler->PSendSysMessage("Character: %s", player->GetPlayerName().c_str());
+        handler->PSendSysMessage("Current equipment average item level: |cff00ffff%u|r", (int)player->GetAverageItemLevel());
+
+        return true;
+    }
+
+    static bool HandleGearStatsCommand(ChatHandler* handler, char const* /*args*/)
+    {
+        Player* player = handler->getSelectedPlayerOrSelf();
+
+        if (!player)
+            return false;
+
+        handler->PSendSysMessage("Character: %s", player->GetPlayerName().c_str());
+
+        if (sWorld->getIntConfig(CONFIG_MIN_LEVEL_STAT_SAVE))
+        {
+            PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHAR_STATS);
+            stmt->setUInt32(0, player->GetGUID());
+            PreparedQueryResult result = CharacterDatabase.Query(stmt);
+
+            if (result)
+            {
+                Field* fields = result->Fetch();
+                uint32 MaxHealth = fields[0].GetUInt32();
+                uint32 Strength = fields[1].GetUInt32();
+                uint32 Agility = fields[2].GetUInt32();
+                uint32 Stamina = fields[3].GetUInt32();
+                uint32 Intellect = fields[4].GetUInt32();
+                uint32 Spirit = fields[5].GetUInt32();
+                uint32 Armor = fields[6].GetUInt32();
+                uint32 AttackPower = fields[7].GetUInt32();
+                uint32 SpellPower = fields[8].GetUInt32();
+                uint32 Resilience = fields[9].GetUInt32();
+
+                handler->PSendSysMessage("Health: |cff00ffff%u|r - Stamina: |cff00ffff%u|r", MaxHealth, Stamina);
+                handler->PSendSysMessage("Strength: |cff00ffff%u|r - Agility: |cff00ffff%u|r", Strength, Agility);
+                handler->PSendSysMessage("Intellect: |cff00ffff%u|r - Spirit: |cff00ffff%u|r", Intellect, Spirit);
+                handler->PSendSysMessage("AttackPower: |cff00ffff%u|r - SpellPower: |cff00ffff%u|r", AttackPower, SpellPower);
+                handler->PSendSysMessage("Armor: |cff00ffff%u|r - Resilience: |cff00ffff%u|r", Armor, Resilience);
+            }
+        }
+
         return true;
     }
 };
