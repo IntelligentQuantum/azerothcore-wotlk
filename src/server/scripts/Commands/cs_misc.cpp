@@ -57,6 +57,11 @@ public:
             { "message",            SEC_ADMINISTRATOR,      true,  &HandleSendMessageCommand,           "" },
             { "money",              SEC_GAMEMASTER,         true,  &HandleSendMoneyCommand,             "" }
         };
+        static std::vector<ChatCommand> gearCommandTable =
+        {
+            { "repair",             SEC_GAMEMASTER,         false,  &HandleGearRepairCommand,              "" },
+            { "stats",              SEC_PLAYER,             false,  &HandleGearStatsCommand,               "" },
+        };
         static std::vector<ChatCommand> commandTable =
         {
             { "dev",                SEC_ADMINISTRATOR,      false, &HandleDevCommand,                   "" },
@@ -103,7 +108,6 @@ public:
             { "damage",             SEC_GAMEMASTER,         false, &HandleDamageCommand,                "" },
             { "combatstop",         SEC_GAMEMASTER,         true,  &HandleCombatStopCommand,            "" },
             { "flusharenapoints",   SEC_ADMINISTRATOR,      false, &HandleFlushArenaPointsCommand,      "" },
-            { "repairitems",        SEC_GAMEMASTER,         true,  &HandleRepairitemsCommand,           "" },
             { "freeze",             SEC_GAMEMASTER,         false, &HandleFreezeCommand,                "" },
             { "unfreeze",           SEC_GAMEMASTER,         false, &HandleUnFreezeCommand,              "" },
             { "group",              SEC_GAMEMASTER,         false, nullptr,                             "", groupCommandTable },
@@ -114,8 +118,7 @@ public:
             { "playall",            SEC_GAMEMASTER,         false, HandlePlayAllCommand,                "" },
             { "skirmish",           SEC_ADMINISTRATOR,      false, HandleSkirmishCommand,               "" },
             { "mailbox",            SEC_MODERATOR,          false, &HandleMailBoxCommand,               "" },
-            { "ilevel",             SEC_PLAYER,             false, &HandleILevelCommand,                "" },
-            { "gearstats",          SEC_PLAYER,             false, &HandleGearStatsCommand,             "" },
+            { "gear",               SEC_PLAYER,             false, nullptr,                             "", gearCommandTable },
         };
         return commandTable;
     }
@@ -2585,7 +2588,7 @@ public:
         return true;
     }
 
-    static bool HandleRepairitemsCommand(ChatHandler* handler, char const* args)
+    static bool HandleGearRepairCommand(ChatHandler* handler, char const* args)
     {
         Player* target;
         if (!handler->extractPlayerTarget((char*)args, &target))
@@ -3310,7 +3313,7 @@ public:
         return true;
     }
 
-    static bool HandleILevelCommand(ChatHandler* handler, char const* /*args*/)
+    static bool HandleGearStatsCommand(ChatHandler* handler, char const* args)
     {
         Player* player = handler->getSelectedPlayerOrSelf();
 
@@ -3319,18 +3322,6 @@ public:
 
         handler->PSendSysMessage("Character: %s", player->GetPlayerName().c_str());
         handler->PSendSysMessage("Current equipment average item level: |cff00ffff%u|r", (int)player->GetAverageItemLevel());
-
-        return true;
-    }
-
-    static bool HandleGearStatsCommand(ChatHandler* handler, char const* /*args*/)
-    {
-        Player* player = handler->getSelectedPlayerOrSelf();
-
-        if (!player)
-            return false;
-
-        handler->PSendSysMessage("Character: %s", player->GetPlayerName().c_str());
 
         if (sWorld->getIntConfig(CONFIG_MIN_LEVEL_STAT_SAVE))
         {
