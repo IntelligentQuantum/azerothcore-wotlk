@@ -3313,7 +3313,7 @@ public:
         return true;
     }
 
-    static bool HandleGearStatsCommand(ChatHandler* handler, char const* args)
+    static bool HandleGearStatsCommand(ChatHandler* handler, char const* /*args*/)
     {
         Player* player = handler->getSelectedPlayerOrSelf();
 
